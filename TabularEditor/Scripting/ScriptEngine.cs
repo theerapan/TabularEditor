@@ -43,11 +43,22 @@ namespace TabularEditor
 
     public static class ScriptEngine
     {
-        static readonly string WrapperDllPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\TabularEditor\TOMWrapper14.dll";
-        static readonly string NewtonsoftJsonDllPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\TabularEditor\newtonsoft.json.dll";
+        static readonly string WrapperDllPath = Path.Combine(AssemblyDirectory, @"TabularDependencies\TOMWrapper14.dll");
+        static readonly string NewtonsoftJsonDllPath = Path.Combine(AssemblyDirectory, @"TabularDependencies\newtonsoft.json.dll");
         static readonly string TomDllPath = Assembly.GetAssembly(typeof(Microsoft.AnalysisServices.Tabular.Database)).Location;
         public static readonly string CustomActionsJsonPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\TabularEditor\CustomActions.json";
         public static readonly string CustomActionsErrorLogPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + @"\TabularEditor\CustomActionsError.log";
+
+        public static string AssemblyDirectory
+        {
+            get
+            {
+                string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+                UriBuilder uri = new UriBuilder(codeBase);
+                string path = Uri.UnescapeDataString(uri.Path);
+                return Path.GetDirectoryName(path);
+            }
+        }
 
         internal static string AddOutputLineNumbers(string script)
         {
